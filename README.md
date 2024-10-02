@@ -1,66 +1,17 @@
-## Foundry
+## MerkleAirdrop
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+A merkle tree based contract for airdropping ETH.
 
-Foundry consists of:
+### Usage
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+Use the `01-generate-merkle-tree.ts` script as an example to generate the merkle tree based on
 
-## Documentation
+- recipient address
+- amount of ETH in wei for that recipient
 
-https://book.getfoundry.sh/
+The script produces a `tree.json` file, which can later be used in a browser to generate for each individual claimer:
 
-## Usage
+- amount of ETH to claim
+- merkle proof
 
-### Build
-
-```shell
-$ forge build
-```
-
-### Test
-
-```shell
-$ forge test
-```
-
-### Format
-
-```shell
-$ forge fmt
-```
-
-### Gas Snapshots
-
-```shell
-$ forge snapshot
-```
-
-### Anvil
-
-```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+The `MerkleAirdrop` contract has a `claim` function, which acceepts these 2 parameters (amount and merkle proof) and can be called by any recipient to get their airdrop.
