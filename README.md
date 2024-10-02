@@ -14,4 +14,4 @@ The script produces a `tree.json` file, which can later be used in a browser to 
 - amount of ETH to claim
 - merkle proof
 
-The `MerkleAirdrop` contract has a `claim` function, which acceepts these 2 parameters (amount and merkle proof) and can be called by any recipient to get their airdrop.
+The `MerkleAirdrop` contract has a `claim` function, which accepts these 2 parameters (amount and merkle proof) and can be called by any recipient to get their airdrop.
