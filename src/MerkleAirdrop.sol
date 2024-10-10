@@ -16,6 +16,7 @@ contract MerkleAirdrop is Ownable2Step {
 
     event MerkleAirdrop__MerkleRootSet(bytes32 _merkleRoot);
     event MerkleAirdrop__EtherRecovered(address _recipient, uint256 _amount);
+    event MerkleAirdrop__Claimed(address indexed _recipient, uint256 _amount);
 
     constructor(bytes32 _merkleRoot) payable {
         merkleRoot = _merkleRoot;
@@ -41,6 +42,7 @@ contract MerkleAirdrop is Ownable2Step {
 
         // Mark address as claimed and transfer the ETH
         claimed[msg.sender] = true;
+        emit MerkleAirdrop__Claimed(msg.sender, _amount);
         Address.sendValue(payable(msg.sender), _amount);
     }
 
