@@ -91,6 +91,47 @@ contract TestMerkleAirdrop is Test {
             assertEq(balanceAfter - balanceBefore, claims[i].amount);
         }
     }
+
+    function test_SetMerkleRoot() external {
+        vm.startPrank(deployer);
+        merkleAirdrop.transferOwnership(owner);
+        vm.stopPrank();
+
+        vm.startPrank(owner);
+        merkleAirdrop.acceptOwnership();
+
+        vm.expectRevert(MerkleAirdrop__SameRoot.selector);
+        merkleAirdrop.setMerkleRoot(root);
+
+        merkleAirdrop.setMerkleRoot(bytes32(uint256(42)));
+        vm.stopPrank();
+    }
+
+    function test_RecoverEther() external {
+        vm.startPrank(deployer);
+        merkleAirdrop.transferOwnership(owner);
+        vm.stopPrank();
+
+        vm.startPrank(owner);
+        merkleAirdrop.acceptOwnership();
+
+        uint256 balanceBefore = address(merkleAirdrop).balance;
+        Address.sendValue(payable(address(merkleAirdrop)), TOTAL_ETHER);
+        uint256 balanceAfter = address(merkleAirdrop).balance;
+        assertEq(balanceAfter - balanceBefore, TOTAL_ETHER);
+
+        vm.expectRevert(MerkleAirdrop__ZeroAddress.selector);
+        merkleAirdrop.recoverEther(payable(address(0)));
+
+        uint256 balance42Before = address(42).balance;
+        merkleAirdrop.recoverEther(payable(address(42)));
+        uint256 balance42After = address(42).balance;
+
+        assertEq(address(merkleAirdrop).balance, 0);
+        assertEq(balance42After - balance42Before, TOTAL_ETHER);
+
+        vm.stopPrank();
+    }
 }
 
 struct Claim {
