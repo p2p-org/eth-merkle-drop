@@ -91,6 +91,21 @@ contract TestMerkleAirdrop is Test {
             assertEq(balanceAfter - balanceBefore, claims[i].amount);
         }
     }
+
+    function test_SetMerkleRoot() external {
+        vm.startPrank(deployer);
+        merkleAirdrop.transferOwnership(owner);
+        vm.stopPrank();
+
+        vm.startPrank(owner);
+        merkleAirdrop.acceptOwnership();
+
+        vm.expectRevert(MerkleAirdrop__SameRoot.selector);
+        merkleAirdrop.setMerkleRoot(root);
+
+        merkleAirdrop.setMerkleRoot(bytes32(uint256(42)));
+        vm.stopPrank();
+    }
 }
 
 struct Claim {

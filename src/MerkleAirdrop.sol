@@ -9,6 +9,7 @@ import "./@openzeppelin/utils/Address.sol";
 
 error MerkleAirdrop__AlreadyClaimed();
 error MerkleAirdrop__InvalidProof();
+error MerkleAirdrop__SameRoot();
 
 contract MerkleAirdrop is Ownable2Step {
     bytes32 public merkleRoot;
@@ -24,6 +25,10 @@ contract MerkleAirdrop is Ownable2Step {
     }
 
     function setMerkleRoot(bytes32 _merkleRoot) external onlyOwner {
+        if (_merkleRoot == merkleRoot) {
+            revert MerkleAirdrop__SameRoot();
+        }
+
         merkleRoot = _merkleRoot;
         emit MerkleAirdrop__MerkleRootSet(_merkleRoot);
     }
