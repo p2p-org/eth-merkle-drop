@@ -10,6 +10,7 @@ import "./@openzeppelin/utils/Address.sol";
 error MerkleAirdrop__AlreadyClaimed();
 error MerkleAirdrop__InvalidProof();
 error MerkleAirdrop__SameRoot();
+error MerkleAirdrop__ZeroAddress();
 
 contract MerkleAirdrop is Ownable2Step {
     bytes32 public merkleRoot;
@@ -25,9 +26,7 @@ contract MerkleAirdrop is Ownable2Step {
     }
 
     function setMerkleRoot(bytes32 _merkleRoot) external onlyOwner {
-        if (_merkleRoot == merkleRoot) {
-            revert MerkleAirdrop__SameRoot();
-        }
+        require (_merkleRoot != merkleRoot, MerkleAirdrop__SameRoot());
 
         merkleRoot = _merkleRoot;
         emit MerkleAirdrop__MerkleRootSet(_merkleRoot);
@@ -52,6 +51,8 @@ contract MerkleAirdrop is Ownable2Step {
     }
 
     function recoverEther(address payable _recipient) external onlyOwner {
+        require (_recipient != address(0), MerkleAirdrop__ZeroAddress());
+
         emit MerkleAirdrop__EtherRecovered(_recipient, address(this).balance);
         Address.sendValue(_recipient, address(this).balance);
     }
